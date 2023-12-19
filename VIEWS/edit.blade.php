@@ -13,7 +13,7 @@
 
     <div class="container mt-5">
         <h2>Form Tambah Data Buah</h2>
-        <form action="{{ route('fruit.update', ['fruit' => $fruit->id]) }}" method="POST">
+        <form action="{{ route('fruit.update', ['fruit' => $fruit->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('put')
             <div class="mb-3">
@@ -27,6 +27,15 @@
             <div class="mb-3">
                 <label for="berat" class="form-label">Berat Buah</label>
                 <input type="text" class="form-control" name="berat" value="{{ $fruit->berat }}">
+            </div>
+            @if ($fruit->foto)
+                <div class="mb-3">
+                    <img style="max-width: 80px" src="{{ url('foto') . '/' . $fruit->foto }}" alt="foto_buah">
+                </div>
+            @endif
+            <div class="mb-3">
+                <label for="foto" class="form-label">Foto Buah</label>
+                <input type="file" class="form-control" name="foto" placeholder="Foto Buah">
             </div>
 
             <button type="submit" class="btn btn-primary">Edit</button>

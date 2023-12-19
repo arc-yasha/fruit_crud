@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Fruit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class FruitController extends Controller
 {
@@ -29,14 +32,21 @@ class FruitController extends Controller
      */
     public function store(Request $request)
     {
-        Fruit::create(
-            [
-                'nama' => $request->nama,
-                'harga' => $request->harga,
-                'berat' => $request->berat
-            ]
-        );
-
+        $rules = [
+            'nama' => 'required',
+            'harga' => 'required',
+            'berat' => 'required',
+        ];
+        $request->hasFile('foto') && $rules['foto'] = 'mimes:jpg,jpeg,png';
+        $data = $request->validate($rules);
+        if ($request->hasFile('foto')) {
+            $foto_file = $request->file('foto');
+            $foto_ekstensi = $foto_file->extension();
+            $foto_nama = uniqid() . '.' . $foto_ekstensi;
+            $foto_file->move(public_path('foto'), $foto_nama);
+            $data['foto'] = $foto_nama;
+        }
+        Fruit::create($data);
         return redirect()->route('fruit.index');
     }
 
@@ -62,14 +72,25 @@ class FruitController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $rules = [
+            'nama' => 'required',
+            'harga' => 'required',
+            'berat' => 'required',
+        ];
+        $request->hasFile('foto') && $rules['foto'] = 'mimes:jpg,jpeg,png';
+        $data = $request->validate($rules);
+        if ($request->hasFile('foto')) {
+            $foto_file = $request->file('foto');
+            $foto_ekstensi = $foto_file->extension();
+            $foto_nama = uniqid() . '.' . $foto_ekstensi;
+            $foto_file->move(public_path('foto'), $foto_nama);
+
+            $buah = Fruit::where('id', $id)->first();
+            File::delete(public_path('foto') . '/' . $buah->foto);
+            $data['foto'] = $foto_nama;
+        }
         Fruit::where('id', $id)
-            ->update(
-                [
-                    'nama' => $request->nama,
-                    'harga' => $request->harga,
-                    'berat' => $request->berat
-                ]
-            );
+            ->update($data);
         return redirect()->route('fruit.index');
     }
 
@@ -78,6 +99,8 @@ class FruitController extends Controller
      */
     public function destroy(string $id)
     {
+        $buah = Fruit::where('id', $id)->first();
+        File::delete(public_path('foto') . '/' . $buah->foto);
         Fruit::destroy($id);
         return redirect()->route('fruit.index');
     }

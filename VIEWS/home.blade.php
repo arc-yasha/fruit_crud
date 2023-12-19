@@ -21,6 +21,7 @@
                     <th scope="col">Nama</th>
                     <th scope="col">Harga</th>
                     <th scope="col">Berat</th>
+                    <th scope="col">Foto</th>
                     <th scope="col">Aksi</th>
                 </tr>
             </thead>
@@ -31,6 +32,9 @@
                         <td>{{ $fruit->nama }}</td>
                         <td>{{ $fruit->harga }}</td>
                         <td>{{ $fruit->berat }}</td>
+                        <td>
+                            <img style="max-width: 80px" src="{{ url('foto') . '/' . $fruit->foto }}" />
+                        </td>
                         <td>
                             <a href="{{ route('fruit.edit', ['fruit' => $fruit->id]) }}"
                                 class="btn btn-primary">Edit</a>

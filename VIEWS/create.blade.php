@@ -13,19 +13,36 @@
 
     <div class="container mt-5">
         <h2>Form Tambah Data Buah</h2>
-        <form action="{{ route('fruit.store') }}" method="POST">
+        <form action="{{ route('fruit.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Buah</label>
-                <input type="text" class="form-control" name="nama" placeholder="Nama Buah">
+                <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama"
+                    placeholder="Nama Buah">
+                @error('nama')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
             <div class="mb-3">
                 <label for="harga" class="form-label">Harga Buah</label>
                 <input type="text" class="form-control" name="harga" placeholder="Harga Buah">
+                @error('harga')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
             <div class="mb-3">
                 <label for="berat" class="form-label">Berat Buah</label>
                 <input type="text" class="form-control" name="berat" placeholder="Berat Buah">
+                @error('berat')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="foto" class="form-label">Foto Buah</label>
+                <input type="file" class="form-control" name="foto" placeholder="Foto Buah">
+                @error('foto')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
 
             <button type="submit" class="btn btn-primary">Simpan</button>

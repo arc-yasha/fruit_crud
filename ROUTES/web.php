@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FruitController;
+use App\Models\Fruit;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
+Route::get('/bootstrap', function () {
+    $fruits = Fruit::all();
+    return view('bootstrap', compact('fruits'));
 });
 
-Route::resource('/fruit', FruitController::class);
+Route::get('/login', function () {
+    return 'anda harus login dahulu';
+})->name('login');
+
+Route::resource('/fruit', FruitController::class)->middleware('auth');
